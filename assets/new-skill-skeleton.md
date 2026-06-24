@@ -32,8 +32,9 @@
 ---
 name: {skill-name}
 description: |
-  {一句话描述}。
-  适用场景：{场景列表}。
+  {一句话定义}。
+  {覆盖的核心能力}。
+  适用场景：{何时使用}。
 allowed-tools:
   - Read
 ---
@@ -83,8 +84,9 @@ allowed-tools:
 ---
 name: {skill-name}
 description: |
-  {一句话描述}。
-  {适用场景说明}。
+  {一句话定义}。
+  {覆盖的核心能力}。
+  适用场景：{何时使用}。
 allowed-tools:
   - Read
   - Grep
@@ -108,10 +110,10 @@ allowed-tools:
 
 ## 模块索引
 
-| 模块 | 路径 | 职责 |
-|------|------|------|
-| {模块 1} | [modules/{name}.md](modules/{name}.md) | {一句话} |
-| {模块 2} | [modules/{name}.md](modules/{name}.md) | {一句话} |
+| 文件 | 职责 | 何时加载 |
+|------|------|---------|
+| [modules/{name}.md](modules/{name}.md) | {一句话职责} | {触发条件} |
+| [modules/{name}.md](modules/{name}.md) | {一句话职责} | {触发条件} |
 
 ## 快速开始
 
@@ -176,8 +178,9 @@ allowed-tools:
 ---
 name: {skill-name}
 description: |
-  {一句话描述}。
-  {适用场景说明}。
+  {一句话定义}。
+  {覆盖的核心能力}。
+  适用场景：{何时使用}。
 allowed-tools:
   - Read
   - Grep
@@ -212,10 +215,10 @@ allowed-tools:
 
 ## 子文档索引
 
-| 文档 | 路径 | 说明 |
-|------|------|------|
-| {阶段 1} | [phases/01_xxx.md](phases/01_xxx.md) | {一句话} |
-| {阶段 2} | [phases/02_xxx.md](phases/02_xxx.md) | {一句话} |
+| 阶段 | 文件 | 职责 | 何时加载 |
+|------|------|------|---------|
+| {阶段 1} | [phases/01_xxx.md](phases/01_xxx.md) | {一句话职责} | {触发条件} |
+| {阶段 2} | [phases/02_xxx.md](phases/02_xxx.md) | {一句话职责} | {触发条件} |
 ```
 
 ### .learnings/CORRECTIONS.md 模板

@@ -16,33 +16,53 @@
 
 ```yaml
 ---
-name: string              # 必须，kebab-case，如 "o3-code-review"
-description: |            # 必须，多行描述，首行为一句话摘要
-  一句话摘要。
-  详细说明适用场景和核心能力。
-allowed-tools:            # 必须，声明需要的工具权限
+name: string # 必须，kebab-case，如 "code-review"
+description: | # 必须，Agent 首轮判断上下文，建议 ≤ 250 字符
+  一句话定义。
+  覆盖的核心能力。
+  适用场景：何时使用。
+allowed-tools: # 必须，声明需要的工具权限
   - Read
   - Grep
   - Edit
   - Terminal
-trigger-keywords:         # 可选，触发此 Skill 的关键词
+trigger-keywords: # 可选，触发此 Skill 的关键词
   - review
   - 评审
-execution-mode: enum      # 可选，guide | review | generate | pipeline
-tier: enum                # 可选，lite | standard | heavy
+execution-mode: enum # 可选，guide | review | generate | pipeline
+tier: enum # 可选，lite | standard | heavy
 ---
 ```
 
 ### 字段说明
 
-| 字段 | 必须 | 说明 |
-|------|:---:|------|
-| `name` | ✅ | 唯一标识，kebab-case |
-| `description` | ✅ | Agent 判断是否加载此 Skill 的依据 |
-| `allowed-tools` | ✅ | 约束 Agent 在此 Skill 下可用的工具集 |
-| `trigger-keywords` | ❌ | 辅助自动匹配 |
-| `execution-mode` | ❌ | 声明执行模式，帮助 Agent 选择交互策略 |
-| `tier` | ❌ | 声明档位，帮助 Agent 预估复杂度 |
+| 字段               | 必须 | 说明                                                     |
+| ------------------ | :--: | -------------------------------------------------------- |
+| `name`             |  ✅  | 唯一标识，kebab-case                                     |
+| `description`      |  ✅  | Agent 首轮判断是否加载此 Skill 的依据（建议 ≤ 250 字符） |
+| `allowed-tools`    |  ✅  | 约束 Agent 在此 Skill 下可用的工具集                     |
+| `trigger-keywords` |  ❌  | 辅助自动匹配                                             |
+| `execution-mode`   |  ❌  | 声明执行模式，帮助 Agent 选择交互策略                    |
+| `tier`             |  ❌  | 声明档位，帮助 Agent 预估复杂度                          |
+
+### `description` 字段写法
+
+- 总长度建议 **≤ 250 字符**（含换行）
+- 建议写成 **2-3 行短句**：是什么 / 覆盖什么 / 何时使用
+- 首行只保留一句话定义，不堆砌子模块、示例、实现细节
+- `references`、工具权限、完整流程不要写进 `description`，放到正文索引中
+- 能用“职责 + 触发条件”表达时，不要展开长场景枚举
+
+### 常用索引表头规范
+
+| 场景           | 推荐表头                           | 说明                                            |
+| -------------- | ---------------------------------- | ----------------------------------------------- |
+| Skill 入口索引 | `文件 \| 职责 \| 何时加载`         | 第一列直接放具体文件链接时使用                  |
+| 章节索引       | `章节 \| 文件 \| 职责 \| 何时加载` | 同时需要显示章节名与文件路径时使用              |
+| 知识库总索引   | `模块 \| 路径 \| 职责 \| 何时加载` | 第一列是概念分组，第二列混合文件/目录路径时使用 |
+| 资源索引       | `文件 \| 用途 \| 何时加载`         | `assets/`、模板、清单、速查表统一使用           |
+
+> ⚠️ 避免把泛化列名 `描述`、`优先级`、`目录` 用作默认表头；只有语义确实精确匹配时才使用。
 
 ---
 
@@ -60,15 +80,18 @@ tier: enum                # 可选，lite | standard | heavy
 **原则**：动词开头，描述行为而非实现
 
 ✅ 正确：
+
 - `getUserById(id)` — 描述行为
 - `validateEmail(input)` — 描述意图
 
 ❌ 错误：
+
 - `data(id)` — 含义模糊
 - `queryDatabaseForUser(id)` — 暴露实现
 ```
 
 **特征**：
+
 - 每条规则独立成段
 - 必须有正/反例
 - 无需 grep 模式（规则太抽象，无法用正则匹配）
@@ -81,7 +104,7 @@ tier: enum                # 可选，lite | standard | heavy
 
 **文档语言**：grep 模式 + 判定规则 + 修复模板
 
-```markdown
+````markdown
 ## 规则：禁止手写 URL 验证
 
 - **检测模式**：`/https?:\/\/|new URL\(|\.match\(.*url/i`
@@ -93,8 +116,11 @@ tier: enum                # 可选，lite | standard | heavy
   // 替换手写逻辑为：
   if (isUrl(value)) { ... }
   ```
+````
+
 - **严重级别**：warning
-```
+
+````
 
 **特征**：
 - 每条规则必须有可执行的检测模式
@@ -140,9 +166,10 @@ const props = defineProps<Props>()
   - 否 → 是否需要跨组件通信？
     - 是 → 使用 provide/inject 模式
     - 否 → 使用纯 props/emit 模式
-```
+````
 
 **特征**：
+
 - 模板是完整可用的，Agent 只需填充占位符
 - 决策树帮助 Agent 选择正确的模板变体
 - 占位符用 `{{SLOT:描述}}` 标记
@@ -155,34 +182,39 @@ const props = defineProps<Props>()
 
 **文档语言**：阶段指引 + Schema + 脚本调用
 
-```markdown
+````markdown
 ## Phase 2: 数据采集
 
 ### 输入
+
 - `state.json` 中的 `targets` 数组
 
 ### 执行
+
 1. 调用脚本：`scripts/collect_data.py --targets {{targets}}`
 2. 验证输出 Schema：`schemas/collected_data.json`
 3. 更新 state：`state.phase = "analysis"`
 
 ### 输出 Schema
+
 \```json
 {
-  "type": "object",
-  "required": ["data", "metadata"],
-  "properties": {
-    "data": { "type": "array" },
-    "metadata": { "type": "object" }
-  }
+"type": "object",
+"required": ["data", "metadata"],
+"properties": {
+"data": { "type": "array" },
+"metadata": { "type": "object" }
+}
 }
 \```
 
 ### 失败处理
+
 - 脚本返回非零 → 记录错误到 state.errors，跳转 Phase 5（报告）
-```
+````
 
 **特征**：
+
 - 每个阶段有明确的输入/输出 Schema
 - 脚本调用是确定性的
 - 失败处理路径预定义
@@ -209,28 +241,34 @@ const props = defineProps<Props>()
 
 ### 使用规则
 
-| 深度 | 何时读取 | Token 预算 |
-|------|---------|-----------|
-| `summary` | 始终读取（在 SKILL.md 中） | < 50 token/条 |
-| `detail` | Agent 确认需要执行该规则时 | < 200 token/条 |
-| `reference` | 遇到边界 case 或歧义时 | 不限 |
+| 深度        | 何时读取                   | Token 预算     |
+| ----------- | -------------------------- | -------------- |
+| `summary`   | 始终读取（在 SKILL.md 中） | < 50 token/条  |
+| `detail`    | Agent 确认需要执行该规则时 | < 200 token/条 |
+| `reference` | 遇到边界 case 或歧义时     | 不限           |
 
 ### 示例
 
 ```markdown
 <!-- depth: summary -->
+
 ## 命名规范
+
 组件用 PascalCase，工具函数用 camelCase，常量用 UPPER_SNAKE_CASE。
 
 <!-- depth: detail -->
+
 ### 详细规则
+
 - Vue 组件文件名：PascalCase，如 `UserProfile.vue`
 - 组合式函数：`use` 前缀 + camelCase，如 `useUserStore`
 - 类型定义：PascalCase + 后缀，如 `UserProfileProps`
 - 枚举值：UPPER_SNAKE_CASE，如 `USER_STATUS.ACTIVE`
 
 <!-- depth: reference -->
+
 ### 边界 case
+
 - HOC 包装组件：`with` 前缀，如 `withAuth(Component)`
 - 动态组件注册名：kebab-case，如 `<component :is="'user-profile'" />`
 - 第三方库 re-export：保持原始命名

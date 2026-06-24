@@ -26,12 +26,13 @@ skill-name/
 ```
 
 **判定条件**（满足全部）：
+
 - 无需脚本执行
 - 无需分阶段工作流
 - 内容 ≤ 3000 字
 - 无外部资源依赖
 
-**项目实例**：`karpathy-guidelines`、`o3-tailwind-style`
+**项目实例**：`karpathy-guidelines`、`commit-convention`
 
 ---
 
@@ -54,11 +55,12 @@ skill-name/
 ```
 
 **判定条件**（满足任一即升档）：
+
 - 内容超过 3000 字，需要拆分
 - 有多个独立主题域需要按需加载
 - 需要提供模板或检查清单
 
-**项目实例**：`o3-code-review`、`spec-writing`、`skill-design-guide`
+**项目实例**：`code-review`、`spec-writing`、`skill-design-guide`
 
 ---
 
@@ -89,6 +91,7 @@ skill-name/
 ```
 
 **判定条件**（满足任一即升档）：
+
 - 需要确定性脚本执行（API 调用、数据清洗）
 - 需要阶段间状态传递（state.json）
 - 需要 JSON Schema 约束 LLM 输出格式
@@ -98,27 +101,27 @@ skill-name/
 
 ## 各层职责速查
 
-| 目录 | 职责 | 消费者 | 适用档位 |
-|------|------|--------|---------|
-| `SKILL.md` | 入口 + 核心原则 + 索引 | Agent 首次加载 | 全部 |
-| `phases/` 或 `modules/` | 按主题/阶段拆分的详细指引 | Agent 按需加载 | Standard + Heavy |
-| `assets/` | 模板、清单、速查表 | Agent 按需引用 | Standard + Heavy |
-| `scripts/` | 确定性操作封装 | OS 直接运行 | Heavy |
-| `schemas/` | 结构约束定义 | 脚本校验 + Agent 输出约束 | Heavy |
-| `knowledge/` | 领域知识 SSOT | 脚本 + Agent 推理参考 | Heavy |
-| `data/` | 静态事实数据 | 脚本直接读取 | Heavy |
-| `.learnings/` | 反馈闭环存储 | 定时固化回流 | Heavy（可选） |
+| 目录                    | 职责                      | 消费者                    | 适用档位         |
+| ----------------------- | ------------------------- | ------------------------- | ---------------- |
+| `SKILL.md`              | 入口 + 核心原则 + 索引    | Agent 首次加载            | 全部             |
+| `phases/` 或 `modules/` | 按主题/阶段拆分的详细指引 | Agent 按需加载            | Standard + Heavy |
+| `assets/`               | 模板、清单、速查表        | Agent 按需引用            | Standard + Heavy |
+| `scripts/`              | 确定性操作封装            | OS 直接运行               | Heavy            |
+| `schemas/`              | 结构约束定义              | 脚本校验 + Agent 输出约束 | Heavy            |
+| `knowledge/`            | 领域知识 SSOT             | 脚本 + Agent 推理参考     | Heavy            |
+| `data/`                 | 静态事实数据              | 脚本直接读取              | Heavy            |
+| `.learnings/`           | 反馈闭环存储              | 定时固化回流              | Heavy（可选）    |
 
 ---
 
 ## 命名规范
 
-| 项目 | 规范 | 示例 |
-|------|------|------|
-| Skill 目录名 | kebab-case | `o3-code-review` |
-| 阶段文件 | 数字前缀 + 下划线 + 名称 | `01_philosophy.md` |
-| 脚本文件 | snake_case | `state_manager.py` |
-| 资源文件 | kebab-case 或 snake_case | `new-skill-checklist.md` |
+| 项目         | 规范                     | 示例                     |
+| ------------ | ------------------------ | ------------------------ |
+| Skill 目录名 | kebab-case               | `code-review`            |
+| 阶段文件     | 数字前缀 + 下划线 + 名称 | `01_philosophy.md`       |
+| 脚本文件     | snake_case               | `state_manager.py`       |
+| 资源文件     | kebab-case 或 snake_case | `new-skill-checklist.md` |
 
 ---
 

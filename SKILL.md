@@ -1,10 +1,9 @@
 ---
 name: skill-design-guide
 description: |
-  Agent Skill 设计范式指南。
-  指导如何设计、构建和迭代高质量的 Agent Skill。
-  核心职责：目录结构规范、结构化语言 DSL、性能与披露策略。
-  适用场景：新建 Skill、迭代已有 Skill、Skill 架构评审。
+  Agent Skill 设计与审计指南。
+  覆盖目录结构、DSL、性能预算与索引写法规范。
+  适用场景：新建 Skill、重构 Skill、评审 Skill 架构。
 allowed-tools:
   - Read
   - Grep
@@ -27,7 +26,7 @@ allowed-tools:
 
 > ⚠️ **确定性优先**：能用 grep 模式 / 代码模板 / 脚本做的，绝不交给 LLM 自然语言理解。
 
-> ⚠️ **Token 预算意识**：入口 SKILL.md ≤ 2KB。Agent 在 Level 1 应能完成 80% 决策，仅 20% 边界 case 需深入子文档。
+> ⚠️ **Token 预算意识**：frontmatter `description` ≤ 250 字符，入口 `SKILL.md` ≤ 2KB。Agent 在 Level 1 应能完成 80% 决策，仅 20% 边界 case 需深入子文档。
 
 ## 执行模式分档
 
@@ -45,25 +44,25 @@ Skill 的目录结构由**执行模式**决定，而非复杂度：
 
 本技能采用 **分层架构**，按主题拆分为独立文档，按需加载。
 
-| 章节 | 文件 | 描述 | 优先级 |
-|------|------|------|--------|
-| 核心设计哲学 | [phases/01_philosophy.md](phases/01_philosophy.md) | 最小必要、确定性优先、Token 预算 | 🔴 必读 |
-| 目录结构规范 | [phases/02_structure.md](phases/02_structure.md) | 三档模型详细规范与选择指南 | 🔴 必读 |
-| Pipeline 设计模式 | [phases/03_pipeline.md](phases/03_pipeline.md) | 阶段划分、状态管理（Heavy 型专用） | 🟡 按需 |
-| 全局约束设计 | [phases/04_constraints.md](phases/04_constraints.md) | 约束分类与定义模式 | 🟡 按需 |
-| 知识管理模式 | [phases/05_knowledge.md](phases/05_knowledge.md) | SSOT 原则、按需加载策略 | 🟡 按需 |
-| 自反哺闭环 | [phases/06_feedback-loop.md](phases/06_feedback-loop.md) | 实时记录、周期固化（可选特性） | ⚪ 可选 |
-| 多实例并行 | [phases/07_team-mode.md](phases/07_team-mode.md) | Team 模式（高级特性，Heavy 型专用） | ⚪ 可选 |
-| 质量保障 | [phases/08_quality.md](phases/08_quality.md) | 通用质量原则 + 审计策略 | 🟡 按需 |
-| 结构化语言 DSL | [phases/09_dsl.md](phases/09_dsl.md) | Skill 文档的写作语言规范 | 🔴 必读 |
-| 性能与披露策略 | [phases/10_performance.md](phases/10_performance.md) | Token 预算、渐进式披露、信息密度 | 🔴 必读 |
+| 章节 | 文件 | 职责 | 何时加载 |
+|------|------|------|---------|
+| 核心设计哲学 | [phases/01_philosophy.md](phases/01_philosophy.md) | 最小必要、确定性优先、Token 预算 | 新建或审计 Skill 前必读 |
+| 目录结构规范 | [phases/02_structure.md](phases/02_structure.md) | 三档模型、目录职责与升档条件 | 判断 Lite / Standard / Heavy 时 |
+| Pipeline 设计模式 | [phases/03_pipeline.md](phases/03_pipeline.md) | Heavy 档阶段划分与状态管理 | 需要 Pipeline / 状态传递时 |
+| 全局约束设计 | [phases/04_constraints.md](phases/04_constraints.md) | 约束分类、层级与表达方式 | 需要定义全局约束时 |
+| 知识管理模式 | [phases/05_knowledge.md](phases/05_knowledge.md) | SSOT、知识分层与引用策略 | 设计知识库结构时 |
+| 自反哺闭环 | [phases/06_feedback-loop.md](phases/06_feedback-loop.md) | 纠错记录与经验固化机制 | 需要建立反馈闭环时 |
+| 多实例并行 | [phases/07_team-mode.md](phases/07_team-mode.md) | Team 模式与协作协议 | 需要多 Agent 并行时 |
+| 质量保障 | [phases/08_quality.md](phases/08_quality.md) | 质量原则、审计策略与护栏 | 需要建立自检与审计时 |
+| 结构化语言 DSL | [phases/09_dsl.md](phases/09_dsl.md) | Frontmatter、规则 DSL 与表头规范 | 设计文档写法时必读 |
+| 性能与披露策略 | [phases/10_performance.md](phases/10_performance.md) | Token 预算、渐进式披露、信息密度 | 需要压缩入口上下文时必读 |
 
 ## 资源文件
 
-| 文件 | 用途 |
-|------|------|
-| [assets/new-skill-skeleton.md](assets/new-skill-skeleton.md) | 新 Skill 脚手架模板（三档均有） |
-| [assets/new-skill-checklist.md](assets/new-skill-checklist.md) | 新建 Skill 时的自检清单 |
+| 文件 | 用途 | 何时加载 |
+|------|------|---------|
+| [assets/new-skill-skeleton.md](assets/new-skill-skeleton.md) | 新 Skill 脚手架模板（三档均有） | 新建 Skill 或重构目录结构时 |
+| [assets/new-skill-checklist.md](assets/new-skill-checklist.md) | 新建 Skill 时的自检清单 | 设计完成后做结构自检时 |
 
 ## 查阅路径
 
